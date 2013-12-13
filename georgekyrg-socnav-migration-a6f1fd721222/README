@@ -1,0 +1,62 @@
+This project aims to help the migration from the old social navigation module
+(socnav) to the new socnav.
+
+The code is divided into two packages:
+
+lib: contains the code from nusoap (http://sourceforge.net/projects/nusoap/).
+nusoap is a set of PHP classes that allow developers to create and consume web
+services based on SOAP. 
+
+src: contains the code that implements the migration logic. It contains the
+following files:
+
+	Event.php: Provides the data model for the migration. It contains Classes
+which transform the data from the format used from the old socnav to the format
+used by the new socnav. It contains a validation methods to ensure the data are
+encode in UTF-8. Moreover, it contains a method to send the data to the new
+socnav using a POST request.
+
+	Harvester.php: Contains a class that connects to the old socnav and fetches
+data. It uses the classes provided by nusoap.
+
+	service_migration.php: It uses the functionality provided from the
+Event.php and the Harvester.php to perform the migration of the data. It offers
+a command line interface. This file provides a command line interface:
+
+  This is the migration service for the social navigation module.
+  The service reads the user ids from the stdin
+
+  Usage:
+  <?php echo $argv[0];?> [-h] [-d] -n number_of_users 
+
+  -d 
+      dry run. Fetch the result from the old socnav, make the necessary,
+      but don't send the results to the new socnav.
+
+  -n
+      The number of user to fetch results for. The service will fetch ratings,
+      reviews and tags for the first n users.
+  
+  -h, --help
+      Print this message.
+
+  Example
+  php migration_service.php -n100 < userss.csv
+
+  Read the ratings, taggings and reviewing for the first 100 users from userss.csv
+  and store them in the new socnav.
+
+
+  php migration_service.php -n100 -d < userss.csv
+
+  Read the ratings, taggings and reviewing for the first 100 users from userss.csv
+  and do NOT store them in the new socnav.
+
+	client.php: It is a web interface to read and write data from the new
+social navigation module. It uses the Event.php library. To be used extract the
+WHOLE project inside an apache controlled directory and visit the file from
+your browser.
+	username = soc
+	password = nav
+
+// vim: tw=80
